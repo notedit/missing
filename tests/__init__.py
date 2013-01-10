@@ -2,8 +2,8 @@
 
 import unittest
 
-from feather import create_app
-from feather import configs
+from missing import create_app
+from missing import configs
 
 class TestCase(unittest.TestCase):
 
