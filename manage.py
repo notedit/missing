@@ -5,20 +5,21 @@ from flask.ext.script import Manager,prompt,prompt_pass,\
         prompt_bool,prompt_choices
 from flask.ext.script import Server
 
+from missing.configs import db
 from missing import create_app
 
 app = create_app()
 manager = Manager(app)
 
 @manager.command
-def initdb():
+def create_all():
     if prompt_bool("Are you sure? You will init your database"):
-        pass
+        db.create_all()
 
 @manager.command
-def dropdb():
+def drop_all():
     if prompt_bool("Are you sure? You will lose all your data!"):
-        pass
+        db.drop_all()
 
 @manager.option('-u','--username',dest='username',required=True)
 @manager.option('-p','--password',dest='password',required=True)
