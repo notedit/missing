@@ -18,8 +18,28 @@ def get_post(post_id):
     return post.json
 
 @register('add_post')
-def add_post():
-    pass
+def add_post(title,author_id,content=None,pic_small='',pic_big='',show=True,recommended=False):
+    assert_error(type(title) == types.UnicodeType,'ParamError')
+    assert_error(type(author_id) == types.IntType,'ParamError')
+    
+    qd = {
+            'title':title,
+            'author_id':author_id,
+            'content':content,
+            'pic_small':pic_small,
+            'pic_big':pic_big,
+            'show':show,
+            'recommended':recommended,
+            }
+    try:
+        p = Post(**qd)
+        db.session.add(p)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise BackendError('InternalError',traceback.format_exc())
+    return p.json
+
 
 
 @register('set_post')

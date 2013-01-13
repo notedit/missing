@@ -37,8 +37,8 @@ class User(db.Model):
                     )
 
 
-class List(db.Model):
-    __tablename__ = 'list'
+class Post(db.Model):
+    __tablename__ = 'post'
 
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.Unicode(300))
@@ -67,14 +67,14 @@ class List(db.Model):
                     date_update=self.date_update)
 
 
-class Post(db.Model):
-    __tablename__ = 'post'
+class Item(db.Model):
+    __tablename__ = 'item'
 
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.Unicode(300))
     content = db.Column(db.UnicodeText)
     author_id = db.Column(db.Integer)
-    type = db.Column(db.String(20))
+    atype = db.Column(db.String(20))
     url = db.Column(db.String(300))
     post_id = db.Column(db.Integer,index=True)
     show = db.Column(db.Boolean,default=True,index=True)
@@ -89,7 +89,7 @@ class Post(db.Model):
                     title=self.title,
                     content=self.content,
                     author_id=self.author_id,
-                    type=self.type,
+                    atype=self.atype,
                     url=self.url,
                     post_id=self.post_id,
                     show=self.show,
