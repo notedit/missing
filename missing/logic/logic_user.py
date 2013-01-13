@@ -79,8 +79,8 @@ def set_user(user_id,info_d):
 
 
 @register('follow_user')
-def follow(fid,tid):
-    assert_error(all(map(lambda _id: type(_id) == types.IntType,[fid,tid])),'ParamError')
+def follow_user(fid,tid):
+    assert_error(all([type(_id) == types.IntType for _id in [fid,tid]),'ParamError')
     try:
         asso = UserFollowAsso(user_id=fid,user_id_to=tid)
         db.session.add(asso)
@@ -89,13 +89,16 @@ def follow(fid,tid):
         db.session.rollback()
         raise
     else:
-        return True
+        return asso.id
 
 @register('unfollow_user')
 def unfollow_user(fid,tid):
-    assert_error(all(map(lambda _id: type(_id) == types.IntType,[fid,tid])),'ParamError')
+    assert_error(all([type(_id) == types.IntType for _id in [fid,tid]),'ParamError')
+    asso = UserFollowAsso.query.filter(db.and_(UserFollowAsso.user_id==fid,UserFollowAsso.user_id_to=tid)).\
+            first()
+    if asso is not None:
+        return
     try:
-        asso = UserFollowAsso(user_id=fid,user_id_to=tid)
         db.session.delete(asso)
     except:
         db.session.rollback()
@@ -131,7 +134,7 @@ def get_user_follower_count(user_id):
 
 @register('is_following_user')
 def is_following_user(fid,tid):
-    assert_error(all(map(lambda _id: type(_id) == types.IntType,[fid,tid])),'ParamError')
+    assert_error(all([type(_id) == types.IntType for _id in [fid,tid]),'ParamError')
     _count = UserFollowAsso.query.filter(UserFollowAsso.user_id == fid).\
             filter(UserFollowAsso.user_id_to == tid).count()
     return True if _count > 0 else False

@@ -135,3 +135,24 @@ class Comment(db.Model):
                     content=self.content,
                     date_create=self.date_create)
 
+class Action(db.Model):
+
+    __tablename__ = 'action'
+
+    id = db.Column(db.Integer,primary_key=True)
+    post_id = db.Column(db.Integer)
+    author_id = db.Column(db.Integer)
+    atype = db.Column(db.String(20))
+    payload = db.Column(db.String(1000))
+    date_create = db.Column(db.DateTime,default=datetime.now)
+
+    @cached_property
+    def json(self):
+        return dict(id=self.id,
+                    post_id=self.post_id,
+                    author_id=self.author_id,
+                    atype=self.atype,
+                    payload=self.payload,
+                    date_create=self.date_create)
+
+
