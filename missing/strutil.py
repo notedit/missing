@@ -8,7 +8,6 @@ import datetime
 from email.utils import formatdate
 
 
-month_ago = lambda : int(time.time()) - 2592000 
 
 def cookie_date(epoch_seconds=None):
 
