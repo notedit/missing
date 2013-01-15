@@ -19,7 +19,7 @@ def get_post(post_id):
 
 @register('add_post')
 def add_post(title,author_id,content=None,pic_small='',pic_big='',show=True,recommended=False):
-    assert_error(type(title) == types.UnicodeType,'ParamError')
+    assert_error(type(title) == types.StringType,'ParamError')
     assert_error(type(author_id) == types.IntType,'ParamError')
     
     qd = {
@@ -64,8 +64,8 @@ def set_post(post_id,pdict):
 
 @register('get_post_list')
 def get_post_list(offset=0,limit=50):
-    posts = Post.query.filter(Post.show == True).order_by(Post.date_create.desc())
-            limit(limit).offset(offest).all()
+    posts = Post.query.filter(Post.show == True).order_by(Post.date_create.desc()).\
+            limit(limit).offset(offset).all()
 
     return [p.json for p in posts]
 

@@ -5,10 +5,11 @@ from flask.ext.script import Manager,prompt,prompt_pass,\
         prompt_bool,prompt_choices
 from flask.ext.script import Server
 
+from missing import configs
 from missing.configs import db
 from missing import create_app
 
-app = create_app()
+app = create_app(configs.ProductionConfig)
 manager = Manager(app)
 
 @manager.command

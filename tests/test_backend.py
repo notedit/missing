@@ -33,7 +33,7 @@ class TestUserLogic(TestCase):
         assert len(users) == 2
 
     def test_add_user(self):
-        user1 = user(username='user01',email='user01@gmail.com',password='pass01')
+        user1 = User(username='user01',email='user01@gmail.com',password='pass01')
         db.session.add(user1)
         db.session.commit()
 
@@ -44,7 +44,7 @@ class TestUserLogic(TestCase):
 
 
     def test_set_user(self):
-        user1 = user(username='user01',email='user01@gmail.com',password='pass01')
+        user1 = User(username='user01',email='user01@gmail.com',password='pass01')
         db.session.add(user1)
         db.session.commit()
 
@@ -68,10 +68,12 @@ class TestUserLogic(TestCase):
         assert asso.user_id_to == user2.id
 
         ret = backend.unfollow_user(user1.id,user2.id)
+
+        assert ret == True
         asso = UserFollowAsso.query.filter(UserFollowAsso.user_id == user1.id).\
                 filter(UserFollowAsso.user_id_to == user2.id).first()
-        
-        assert asso is None
+        print asso 
+        assert asso == None
 
 
     def test_get_user_following(self):
@@ -135,7 +137,7 @@ class TestPostLogic(TestCase):
 
     def test_get_post(self):
         user = backend.add_user('user02','user02@gmail.com','pass02')
-        post = Post(title='post01',user['id'],content='content01',pic_small='pic_small')
+        post = Post(title='post01',author_id=user['id'],content='content01',pic_small='pic_small')
         db.session.add(post)
         db.session.commit()
         
@@ -215,7 +217,7 @@ class TestItemLogic(TestCase):
         user = backend.add_user('user02','user02@gmail.com','pass02')
         post1 = backend.add_post('title01',user['id'],content='content01')
 
-        item = backend.add_item(u'item1',user['id'],post1['id'],'')
+        item = backend.add_item('item1',user['id'],post1['id'],'')
         assert item['title'] == 'item1'
         
     def test_set_item(self):
@@ -223,7 +225,7 @@ class TestItemLogic(TestCase):
         user = backend.add_user('user02','user02@gmail.com','pass02')
         post1 = backend.add_post('title01',user['id'],content='content01')
 
-        item = backend.add_item(u'item1',user['id'],post1['id'],'')
+        item = backend.add_item('item1',user['id'],post1['id'],'')
 
         item = backend.set_item(item['id'],{'title':'title3'})
         assert item['title'] ==  'title3'

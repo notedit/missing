@@ -6,7 +6,7 @@ SQLAlchemy==0.7.8
 WTForms==1.0.1
 Werkzeug==0.8.3
 colander==0.9.8
-gunicorn==0.15.0
+gunicorn==0.16.0
 nose==1.2.1
 requests==0.14.1
 rq==0.3.2

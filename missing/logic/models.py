@@ -9,6 +9,8 @@ import contextlib
 from datetime import datetime
 from werkzeug import cached_property
 
+from sqlalchemy.dialects.postgresql import ARRAY
+
 from missing.configs import db
 
 
@@ -41,13 +43,14 @@ class Post(db.Model):
     __tablename__ = 'post'
 
     id = db.Column(db.Integer,primary_key=True)
-    title = db.Column(db.Unicode(300))
-    content = db.Column(db.UnicodeText)
+    title = db.Column(db.String(300))
+    content = db.Column(db.Text())
     pic_small = db.Column(db.String(255))
     pic_big = db.Column(db.String(255))
     author_id = db.Column(db.Integer,db.ForeignKey(User.id),index=True)
-    show = db.Column(db.String(20),index=True)
+    show = db.Column(db.Boolean,index=True)
     recommended = db.Column(db.Boolean,default=False,index=True)
+    liked_by = db.Column(ARRAY(db.Integer,mutable=True),default=[])
     date_create = db.Column(db.DateTime,default=datetime.now)
     date_update = db.Column(db.DateTime,default=datetime.now)
 
@@ -63,6 +66,7 @@ class Post(db.Model):
                     author_id=self.author_id,
                     show=self.show,
                     recommended=self.recommended,
+                    liked_by=self.liked_by,
                     date_create=self.date_create,
                     date_update=self.date_update)
 
@@ -71,15 +75,15 @@ class Item(db.Model):
     __tablename__ = 'item'
 
     id = db.Column(db.Integer,primary_key=True)
-    title = db.Column(db.Unicode(300))
-    content = db.Column(db.UnicodeText)
+    title = db.Column(db.String(300))
+    content = db.Column(db.Text())
     author_id = db.Column(db.Integer)
     atype = db.Column(db.String(20))
     url = db.Column(db.String(300))
     post_id = db.Column(db.Integer,index=True)
     show = db.Column(db.Boolean,default=True,index=True)
     status = db.Column(db.String(20))
-    liked_by = db.Column(db.Array(db.Integer,mutable=True),default=[])
+    liked_by = db.Column(ARRAY(db.Integer,mutable=True),default=[])
     date_create = db.Column(db.DateTime,default=datetime.now)
     date_update = db.Column(db.DateTime,default=datetime.now)
 
@@ -112,9 +116,10 @@ class UserFollowAsso(db.Model):
 class UserLikeAsso(db.Model):
     
     __tablename__ = 'user_like_asso'
+    id = db.Column(db.Integer,primary_key=True)
     user_id = db.Column(db.Integer)
     object_id = db.Column(db.Integer)
-    type = db.Column(db.String(20))
+    atype = db.Column(db.String(20))
     date_create = db.Column(db.DateTime,default=datetime.now)
 
 class Comment(db.Model):
@@ -124,7 +129,7 @@ class Comment(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     post_id = db.Column(db.Integer)
     author_id = db.Column(db.Integer)
-    content = db.Column(db.UnicodeText)
+    content = db.Column(db.String(1000))
     date_create = db.Column(db.DateTime,default=datetime.now)
 
     @cached_property

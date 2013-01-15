@@ -2,21 +2,26 @@
 
 import unittest
 
+from flask import g
+from flask.ext.testing import TestCase as Base
+
 from missing import create_app
 from missing import configs
 
-class TestCase(unittest.TestCase):
+from missing.configs import db
+from missing.logic import backend
+from missing.logic import *
 
-    def __init__(self,*args,**kwargs):
-        self.app = create_app(configs.TestConfig)
-        self.app.config['TESTING'] = True
-        super(TestCase,self).__init__(*args,**kwargs)
+class TestCase(Base):
 
+    def create_app(self):
+        app = create_app(configs.TestConfig)
+        app.config['TESTING'] = True
+        return app
+    
     def setUp(self):
-        self.client = self.app.test_client()
-        print '不写单元测试的人注定一辈子敲代码'
-        pass
+        db.create_all()
 
     def tearDown(self):
-        print 'hello world, do not panic'
-        pass
+        db.session.remove()
+        db.drop_all()

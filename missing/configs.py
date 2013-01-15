@@ -20,14 +20,15 @@ class DefaultConfig(object):
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_NAME = 'Ssession'
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(180)
-    SQLALCHEMY_DATABASE_URL = 'postgresql+psycopg2://user:password@localhost/missing'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://user:password@localhost/missing'
     SQLALCHEMY_ECHO = False
 
 class TestConfig(object):
-    SQLALCHEMY_DATABASE_URL = 'postgresql+psycopg2://user:password@localhost/test'
-    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://user:password@localhost/test'
+    SQLALCHEMY_ECHO = False
 
 class ProductionConfig(object):
-    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://user:password@localhost/missing'
     DEBUG = False
 

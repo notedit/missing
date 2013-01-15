@@ -14,7 +14,7 @@ from missing.configs import db
 
 @register('get_item')
 def get_item(item_id):
-    assert_error(type(item_id) in (types.IntType,types.ListType).'ParamError')
+    assert_error(type(item_id) in (types.IntType,types.ListType),'ParamError')
     multi = False
     if type(item_id) == types.ListType:
         assert_error(all([type(i) == types.IntType for i in item_id]),'ParamError')
@@ -34,7 +34,7 @@ def get_item(item_id):
 
 @register('add_item')
 def add_item(title,author_id,post_id,atype,url=None,content=None):
-    assert_error(type(title) == types.UnicodeType,'ParamError')
+    assert_error(type(title) == types.StringType,'ParamError')
     assert_error(type(author_id) == types.IntType,'ParamError')
     assert_error(type(post_id) == types.IntType,'ParamError')
     
