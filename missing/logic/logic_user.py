@@ -32,6 +32,16 @@ def get_user(user_id):
     else:
         return users[0].json
 
+@register('is_username_exist')
+def is_username_exist(username):
+    assert_error(type(username) == types.StringType,'ParamError')
+    return True if _check_username(username) else False
+
+@register('is_email_exist')
+def is_email_exist(email):
+    assert_error(type(email) == types.StringType,'ParamError')
+    return True if _check_email(email) else False
+
 def _check_username(username):
     u = User.query.filter(db.func.lower(User.username) == username).first()
     return u
