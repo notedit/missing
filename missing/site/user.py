@@ -5,6 +5,7 @@
 
 import sys 
 import time
+import logging
 import flask
 from flask import g
 from flask import request
@@ -18,11 +19,14 @@ from flask import render_template
 from flask.views import MethodView
 from flask.views import View
 
-from missing import authutil
+from werkzeug import generate_password_hash, check_password_hash
 
+from missing import authutil
 from missing.site import instance
 from missing.logic import backend
 from missing.coreutil import BackendError
+
+from missing.site.forms import SignupForm,LoginForm
 
 
 @instance.route('/login',methods=('GET','POST')) 
@@ -32,8 +36,35 @@ def login():
 
     form = LoginForm(email=request.values.get('email',None),
                     password=request.values.get('password',None))
+
     if form.validate_on_submit():
-        pass
+        email = form.email.data.encode('utf-8')
+        password = form.password.data.encode('utf-8')
+
+        user = backend.get_user_by_email(email)
+        ret = check_password_hash(user.get('password',''),password)
+        
+        if ret:
+            next_url = form.next.data
+            if not next_url or next_url == request.path:
+                next_url = '/'
+            resp = redirect(next_url)
+            timeout = 24 * 3600 * 180 if form.remember.data else None
+            authutil.set_logined(request,resp,str(user['id']),timeout=timeout)
+            return resp
+
+        flash('用户名或者密码错误,请重试','error')
+
+    return render_template('login.html',form=form)
+
+
+@instance.route('/logout',methods=('GET'))
+def logout():
+    resp = redirect('/')
+    authutil.set_logout(request,resp)
+    return resp
+        
+
 
 
 @instance.route('/signup',methods=('GET','POST'))
@@ -41,8 +72,32 @@ def signup():
     if authutil.is_logined(request):
         return redirect('/')
 
-    form = SignupForm()
+    form = SignupForm(next=request.values.get('next'))
+
     if form.validate_on_submit():
-        pass
+        
+        username = form.username.data.encode('utf-8')
+        password = form.password.data.encode('utf-8')
+        email = form.email.data.encode('utf-8')
+
+        _passstr = generate_password_hash(password)
+        
+        try:
+            user = backend.add_user(username,email,_passstr)
+        except BackendError,ex:
+            logging.info(traceback.format_exc())
+            flash('用户注册失败,请稍后再试','error')
+            return render_template('signup.html',form=form)
+
+        next_url = form.next.data
+
+        if not next_url or next_url == request.path:
+            next_url = '/'
+
+        return redirect(next_url)
+
+    return render_template('signup.html',form=form)
+
+
 
 

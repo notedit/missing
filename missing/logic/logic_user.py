@@ -32,6 +32,16 @@ def get_user(user_id):
     else:
         return users[0].json
 
+@register('get_user_by_username')
+def get_user_by_username(username):
+    user = User.query.filter(User.username == username).first()
+    return user.json if user else {}
+
+@register('get_user_by_email')
+def get_user_by_email(email):
+    user = User.query.filter(User.email == email).first()
+    return user.json if user else {}
+
 @register('is_username_exist')
 def is_username_exist(username):
     assert_error(type(username) == types.StringType,'ParamError')
