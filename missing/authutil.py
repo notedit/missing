@@ -7,6 +7,8 @@ import datetime
 
 import strutil
 
+from flask import g,request,redirect
+
 from flask import current_app as app
 
 def set_logined(req,resp,ukey,timeout=None):
@@ -48,8 +50,18 @@ def is_logined(req):
     return False
 
 
-
-    
+def user_required(f):
+    '''必须登陆后才能访问的视图'''
+    def decorator(*args,**kwargs):
+        if not request.cookies.get('is_logined'):
+            return redirect('/login?next=%s' % request.path)
+        ukey = request.cookies.get('ukey','')
+        date_create = request.cookies.get('date_create','')
+        token = request.cookies.get('token','')
+        if hashlib.sha1(app.config.get('COOKIE_SALT') + ukey + date_create).hexdigest() != token:
+            return redirect('/login?next=%s' % request.path)
+        # g.user = {}
+        return f(*args,**kwargs)
 
 
 
