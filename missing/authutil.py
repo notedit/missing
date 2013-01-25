@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import datetime
+import hashlib
 
 import strutil
 
@@ -23,7 +24,7 @@ def set_logined(req,resp,ukey,timeout=None):
     else:
         timeout = 0
     date_create = str(date_create)
-    sha1num = hashlib.sha1(app.config.get('COOKIE_SALT') + ukey + date_create).hexdigest()
+    sha1sum = hashlib.sha1(app.config.get('SECRET_KEY','') + ukey + date_create).hexdigest()
     resp.set_cookie('is_logined','True',**kargs)
     resp.set_cookie('ukey',ukey,**kargs)
     resp.set_cookie('date_create',date_create,**kargs)
@@ -45,7 +46,7 @@ def is_logined(req):
     ukey = req.cookies.get('ukey','')
     date_create = req.cookies.get('date_create','')
     token = req.cookies.get('token','')
-    if hashlib.sha1(app.config.get('COOKIE_SALT') + ukey + date_create).hexdigest() == token:
+    if hashlib.sha1(app.config.get('SECRET_KEY') + ukey + date_create).hexdigest() == token:
         return True
     return False
 
@@ -53,15 +54,11 @@ def is_logined(req):
 def user_required(f):
     '''必须登陆后才能访问的视图'''
     def decorator(*args,**kwargs):
-        if not request.cookies.get('is_logined'):
+        if not is_logined(request):
             return redirect('/login?next=%s' % request.path)
-        ukey = request.cookies.get('ukey','')
-        date_create = request.cookies.get('date_create','')
-        token = request.cookies.get('token','')
-        if hashlib.sha1(app.config.get('COOKIE_SALT') + ukey + date_create).hexdigest() != token:
-            return redirect('/login?next=%s' % request.path)
-        # g.user = {}
+        g.user_id = int(request.cookies.get('ukey'))
         return f(*args,**kwargs)
-
+    decorator.__name__ = f.__name__
+    return decorator
 
 

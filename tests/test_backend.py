@@ -42,6 +42,14 @@ class TestUserLogic(TestCase):
 
         self.assertRaises(BackendError,backend.add_user,'user02','user02@gmail.com','pass02')
 
+    def test_auth_user(self):
+        user = backend.add_user('user02','user02@gmail.com','pass02')
+        ret,_user = backend.auth_user('user02@gmail.com','pass02')
+        print ret
+        assert ret == True
+
+        ret,_user = backend.auth_user('user01@gmail.com','pass02')
+        assert ret == False
 
     def test_set_user(self):
         user1 = User(username='user01',email='user01@gmail.com',password='pass01')

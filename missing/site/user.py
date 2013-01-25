@@ -34,16 +34,14 @@ def login():
     if authutil.is_logined(request):
         return redirect('/')
 
-    form = LoginForm(email=request.values.get('email',None),
-                    password=request.values.get('password',None))
+    form = LoginForm(email=request.values.get('email',''),
+                    password=request.values.get('password',''))
 
     if form.validate_on_submit():
         email = form.email.data.encode('utf-8')
         password = form.password.data.encode('utf-8')
 
-        user = backend.get_user_by_email(email)
-        ret = check_password_hash(user.get('password',''),password)
-        
+        ret,user = backend.auth_user(email,password)
         if ret:
             next_url = form.next.data
             if not next_url or next_url == request.path:
@@ -53,12 +51,12 @@ def login():
             authutil.set_logined(request,resp,str(user['id']),timeout=timeout)
             return resp
 
-        flash('用户名或者密码错误,请重试','error')
+        flash(u'用户名或者密码错误,请重试','error')
 
-    return render_template('login.html',form=form)
+    return render_template('site/login.html',form=form)
 
 
-@instance.route('/logout',methods=('GET'))
+@instance.route('/logout',methods=('GET',))
 def logout():
     resp = redirect('/')
     authutil.set_logout(request,resp)
@@ -80,10 +78,9 @@ def signup():
         password = form.password.data.encode('utf-8')
         email = form.email.data.encode('utf-8')
 
-        _passstr = generate_password_hash(password)
         
         try:
-            user = backend.add_user(username,email,_passstr)
+            user = backend.add_user(username,email,password)
         except BackendError,ex:
             logging.info(traceback.format_exc())
             flash('用户注册失败,请稍后再试','error')
@@ -96,7 +93,8 @@ def signup():
 
         return redirect(next_url)
 
-    return render_template('signup.html',form=form)
+    print form.errors
+    return render_template('site/signup.html',form=form)
 
 
 

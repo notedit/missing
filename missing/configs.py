@@ -17,8 +17,8 @@ class DefaultConfig(object):
     SECRET_KEY = 'lifeistooshorttowait'
     SESSION_COOKIE_PATH='/'
     SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SECURE = True
-    SESSION_COOKIE_NAME = 'Ssession'
+    #SESSION_COOKIE_SECURE = True
+    #SESSION_COOKIE_NAME = 'themissing'
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(180)
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://user:password@localhost/missing'
     SQLALCHEMY_ECHO = False
@@ -26,6 +26,7 @@ class DefaultConfig(object):
 class TestConfig(object):
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://user:password@localhost/test'
     SQLALCHEMY_ECHO = False
+    CSRF_ENABLED = False
 
 class ProductionConfig(object):
     SQLALCHEMY_ECHO = True

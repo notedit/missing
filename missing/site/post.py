@@ -56,7 +56,7 @@ def post_new():
 
 
 
-@instance.route('/post/<int:post_id>',methods=('GET'))
+@instance.route('/post/<int:post_id>',methods=('GET',))
 def post_one(post_id):
     try:
         post = backend.get_post(post_id)
@@ -111,7 +111,7 @@ def post_edit(post_id):
     return render_template('site/post_edit.html',form=form)
 
 
-@instance.route('/post/<int:post_id>/delete',methods=('GET'))
+@instance.route('/post/<int:post_id>/delete',methods=('GET',))
 @user_required
 def post_delete(post_id):
 

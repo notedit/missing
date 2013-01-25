@@ -38,7 +38,6 @@ class User(db.Model):
                     date_update=self.date_update
                     )
 
-
 class Post(db.Model):
     __tablename__ = 'post'
 

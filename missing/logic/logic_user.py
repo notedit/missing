@@ -60,6 +60,16 @@ def _check_email(email):
     u = User.query.filter(User.email == email).first()
     return u
 
+@register('auth_user')
+def auth_user(email,passstr):
+    assert_error(type(email) == types.StringType,'ParamError')
+    assert_error(type(passstr) == types.StringType,'ParamError')
+    
+    user = User.query.filter(User.email == email).first()
+    return (True,user.json) if user and check_password_hash(user.password,passstr) \
+                            else (False,{})
+        
+
 @register('add_user')
 def add_user(username,email,passstr):
     assert_error(type(email)==types.StringType,'ParamError','邮箱应该为字符串')
@@ -73,6 +83,7 @@ def add_user(username,email,passstr):
         raise BackendError('EmailError','邮箱已经存在')
 
     try:
+        passstr = generate_password_hash(passstr)
         user = User(email=email,username=username,password=passstr)
         db.session.add(user)
         db.session.commit()

@@ -84,5 +84,4 @@ def configure_handler(app):
 
 def configure_blueprints(app):
     app.register_blueprint(site)
-
-    
+    print app.url_map
