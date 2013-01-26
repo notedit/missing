@@ -49,6 +49,7 @@ class Post(db.Model):
     author_id = db.Column(db.Integer,db.ForeignKey(User.id),index=True)
     show = db.Column(db.Boolean,index=True)
     recommended = db.Column(db.Boolean,default=False,index=True)
+    visite_count = db.Column(db.Integer,default=0)
     liked_by = db.Column(ARRAY(db.Integer,mutable=True),default=[])
     date_create = db.Column(db.DateTime,default=datetime.now)
     date_update = db.Column(db.DateTime,default=datetime.now)
@@ -65,6 +66,7 @@ class Post(db.Model):
                     author_id=self.author_id,
                     show=self.show,
                     recommended=self.recommended,
+                    visite_count=self.visite_count,
                     liked_by=self.liked_by,
                     date_create=self.date_create,
                     date_update=self.date_update)

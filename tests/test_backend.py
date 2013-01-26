@@ -174,17 +174,30 @@ class TestPostLogic(TestCase):
         self.assertRaises(BackendError,backend.set_post,post['id'],{'liked_by':'aaaaaa'})
 
 
-    def test_get_post_list(self):
+    def test_get_latest_post(self):
         user = backend.add_user('user02','user02@gmail.com','pass02')
         post1 = backend.add_post('title01',user['id'],content='content01')
         post2 = backend.add_post('title02',user['id'],content='content02')
         post2 = backend.add_post('title03',user['id'],content='content03')
 
-        posts = backend.get_post_list()
+        posts = backend.get_latest_post()
         assert len(posts) == 3
 
-        count = backend.get_post_list_count()
+        count = backend.get_post_count()
         assert count == 3
+
+    def test_get_hot_post(self):
+        user = backend.add_user('user02','user02@gmail.com','pass02')
+        post1 = backend.add_post('title01',user['id'],content='content01')
+        post2 = backend.add_post('title02',user['id'],content='content02')
+        post2 = backend.add_post('title03',user['id'],content='content03')
+
+        posts = backend.get_hot_post()
+        assert len(posts) == 3
+
+        count = backend.get_post_count()
+        assert count == 3
+        
 
     def test_get_post_item(self):
         user = backend.add_user('user02','user02@gmail.com','pass02')

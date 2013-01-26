@@ -56,7 +56,6 @@ def user_required(f):
     def decorator(*args,**kwargs):
         if not is_logined(request):
             return redirect('/login?next=%s' % request.path)
-        g.user_id = int(request.cookies.get('ukey'))
         return f(*args,**kwargs)
     decorator.__name__ = f.__name__
     return decorator

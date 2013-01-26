@@ -4,7 +4,7 @@ import re
 
 from flask.ext.wtf import Form,HiddenField,BooleanField,\
         TextField,PasswordField,SubmitField,ValidationError,required,\
-        email,equal_to,regexp
+        email,equal_to,regexp,length
 
 from missing.logic import backend
 
@@ -40,13 +40,14 @@ class SignupForm(Form):
 
 
 class EmailForm(Form):
+    email = TextField(validators=[required(message=u'邮箱是必须的'),email(message=u'你的邮箱不合法')])
 
-	email = TextField(validators=[required(message='邮箱是必须的'),email(message='你的邮箱不合法')])
 
+class PostForm(Form):
+    
+    title = TextField(default='',validators=[length(min=4,max=50,message=u'标题太短或者太长')])
+    content = TextField()
 
-class NewPostForm(Form):
-
-	title = TextField()
 
 class SuggestTitleForm(Form):
 

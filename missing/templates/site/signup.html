@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>注册  &middot; MissingList</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+
+      /* Sticky footer styles
+      -------------------------------------------------- */
+
+
+      /* Lastly, apply responsive CSS fixes as necessary */
+    
+
+      /* Custom page CSS
+      -------------------------------------------------- */
+      /* Not required for template or sticky footer method. */
+
+      .error {            
+        color: #b94a48;
+      }
+
+      .form-border {
+
+        margin: 15px 0;
+        padding: 39px 19px 14px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+      }
+
+      .footer {
+        bottom: 0px;
+        background-color: #f5f5f5;
+        height: 60px;
+      }
+
+      .container {
+        width: auto;
+        max-width: 979px;
+      }
+
+    </style>
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/static/css/google-bootstrap.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body>
+
+
+    <!-- Part 1: Wrap all page content here -->
+  
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Missing List</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              <li><a href="#">创建一个新的列表</a></li>
+
+              <li><a href="#about">发现</a></li>
+  
+              <li><a href="#contact">注册</a></li>
+
+              <li><a href="#contact">登陆</a></li>
+             
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row" style="height:60px">
+
+      </div>
+      <h4>注册</h4>
+      <p>
+        注册成为MissingList的用户 <span  class="pull-right"> 已有用户，点击<a href="/login">这里</a>进行登陆</span>
+      </p>
+      <form class="form-horizontal form-border"  action="/signup" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        <div class="control-group">
+          <label class="control-label" for="username">用户名</label>
+          <div class="controls">
+            <input type="text" id="username" placeholder="" name="username" value="{{ form.username.data }}">
+            {% if form.username.errors %}
+            <span class="help-inline error">{{ form.username.errors[0] }}</span>
+            {% else %}
+            <span class="help-inline">只允许英文字母和数字</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="password">密码</label>
+          <div class="controls">
+            <input type="password" id="password" placeholder="" name="password">
+            {% if form.password.errors %}
+            <span class="help-inline error">{{ form.password.errors[0] }}</span>
+            {% else %}
+            <span class="help-inline">密码最小长度为六位</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="repeat-password">重复密码</label>
+          <div class="controls">
+            <input type="password" id="repeat-password" placeholder="" name="repassword">
+            {% if form.repassword.errors %}
+            <span class="help-inline error">两次输入的密码不相符</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="email">邮箱</label>
+          <div class="controls">
+            <input type="email" id="email" placeholder="" name="email" required value="{{ form.email.data }}">
+            {% if form.email.errors %}
+            <span class="help-inline error">{{ form.email.errors[0] }}</span>
+            {% else %}
+            <span class="help-inline">请输入真实的邮箱</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            
+            <button type="submit" class="btn btn-primary">提交</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/bootstrap-transition.js"></script>
+    <script src="/static/js/bootstrap-alert.js"></script>
+    <script src="/static/js/bootstrap-modal.js"></script>
+    <script src="/static/js/bootstrap-dropdown.js"></script>
+    <script src="/static/js/bootstrap-scrollspy.js"></script>
+    <script src="/static/js/bootstrap-tab.js"></script>
+    <script src="/static/js/bootstrap-tooltip.js"></script>
+    <script src="/static/js/bootstrap-popover.js"></script>
+    <script src="/static/js/bootstrap-button.js"></script>
+    <script src="/static/js/bootstrap-collapse.js"></script>
+    <script src="/static/js/bootstrap-carousel.js"></script>
+    <script src="/static/js/bootstrap-typeahead.js"></script>
+
+  </body>
+</html>

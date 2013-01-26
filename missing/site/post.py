@@ -27,7 +27,7 @@ from missing.coreutil import BackendError
 from missing.authutil import user_required
 from missing.helpers import keep_login_url
 
-from missing.site.forms import SignupForm,LoginForm
+from missing.site.forms import PostForm
 
 
 @instance.route('/post/new',methods=('GET','POST'))
@@ -40,7 +40,7 @@ def post_new():
 
         title = form.title.data.encode('utf-8')
         content = form.content.data.encode('utf-8')
-        author_id = g.user_id
+        author_id = g.user['id']
         
         try:
             post = backend.add_post(title,author_id,content)

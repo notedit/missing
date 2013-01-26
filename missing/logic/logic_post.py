@@ -62,18 +62,39 @@ def set_post(post_id,pdict):
     return post.json
 
 
-@register('get_post_list')
-def get_post_list(offset=0,limit=50):
+@register('get_latest_post')
+def get_latest_post(offset=0,limit=50):
     posts = Post.query.filter(Post.show == True).order_by(Post.date_create.desc()).\
             limit(limit).offset(offset).all()
 
-    return [p.json for p in posts]
+    _posts = []
+    for p in posts:
+        _u = p.author.json
+        _p = p.json
+        _p.update({'user':_u})
+        _posts.append(_p)
+
+    return _posts
 
 
-@register('get_post_list_count')
+@register('get_post_count')
 def get_post_count():
     count = Post.query.filter(Post.show == True).count()
     return count
+
+@register('get_hot_post')
+def get_hot_post(offset=0,limit=50):
+    posts = Post.query.filter(Post.show == True).order_by(Post.visite_count.desc()).\
+            limit(limit).offset(offset).all()
+
+    _posts = []
+    for p in posts:
+        _u = p.author.json
+        _p = p.json
+        _p.update({'user':_u})
+        _posts.append(_p)
+
+    return _posts
 
 
 @register('get_post_item')

@@ -10,6 +10,7 @@ from missing.configs import db,cache,mail
 
 from missing import logic
 from missing import authutil
+from missing.logic import backend
 from missing.site import instance as site
 
 # add some other view
@@ -65,7 +66,7 @@ def configure_handler(app):
                 max_age = 3600*24*30*6
                 expires_time = int(time.time()) + max_age
                 expires = strutil.cookie_date(expires_time) 
-                g.curr_id = int(request.cookie.get('ukey'))
+                g.user = backend.get_user(int(request.cookie.get('ukey')))
                 @after_this_request
                 def set_cookie(response):
                     response.set_cookie('is_logined',
@@ -75,10 +76,13 @@ def configure_handler(app):
                                         path='/')
                     return response
             else:
+                g.user = {}
                 @after_this_request
                 def delete_cookie(response):
                     response.delete_cookie('is_logined')
                     return response
+        else:
+            g.user = {}
 
 
 

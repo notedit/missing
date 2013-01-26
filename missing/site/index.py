@@ -29,7 +29,27 @@ from missing.coreutil import BackendError
 
 @instance.route('/',methods=('GET',)) 
 def index():
-    return 'hello do not panic'
+    try:
+        page = int(request.values.get('page',1))
+    except:
+        page = 1
+
+    if page <= 0:page = 1
+    
+    offset = (page-1) * 50
+    latest_posts = backend.get_latest_post(offset=offset,limit=50)
+    post_count = backend.get_post_count()
+
+    hot_posts = backend.get_hot_post(offset=offset,limit=50)
+    
+    return render_template(latest_posts=latest_posts,hot_posts=hot_posts,
+                                post_count=post_count,page=page)
+
+
+
+
+
+    
 
 
 
